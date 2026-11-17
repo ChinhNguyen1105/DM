@@ -94,3 +94,35 @@ class ID3:
 
     def get_tree(self):
         return self.model.tree_
+
+
+if __name__ == '__main__':
+    df = pd.read_csv(
+        r'D:\KhaiPhaDuLieu\TX2_KhaiPha\bai so 2. cay quyet dinh\on\PlayTennis.csv'
+    )
+
+    model1 = ID3pure()
+    model1.fit(df, 'PlayTennis')
+
+    model2 = ID3()
+
+    X = pd.get_dummies(df.drop(columns=['PlayTennis']))
+    y = df['PlayTennis']
+
+    model2.fit(X, y)
+
+    x_sample = pd.Series({
+        'Outlook': 'Sunny',
+        'Temperature': 'Cool',
+        'Humidity': 'High',
+        'Wind': 'Strong'
+    })
+
+    result = pd.DataFrame([
+        ['ID3 Pure', model1.predict_one(x_sample.to_dict())],
+        ['ID3 Library', model2.predict(pd.get_dummies(
+            pd.DataFrame([x_sample])
+        ).reindex(columns=X.columns, fill_value=0))[0]]
+    ], columns=['Model', 'Prediction'])
+
+    print(result)

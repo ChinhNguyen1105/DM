@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
@@ -89,4 +88,35 @@ class LibraryGaussianNB:
         predictions = self.predict(X_test)
         return accuracy_score(y_test, predictions)
 
+if __name__ == '__main__':
+    df = pd.read_csv('D:\KhaiPhaDuLieu\TX2_KhaiPha\Data\diabetes.txt')
+    x_train = df.loc[:,['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
+       'BMI', 'DiabetesPedigreeFunction', 'Age']]
+    x_sample = pd.DataFrame(
+       [ {'Pregnancies': 10
+            , 'Glucose': 110
+            , 'BloodPressure': 80
+            , 'SkinThickness': 30
+            , 'Insulin': 5
+            , 'BMI': 31
+            , 'DiabetesPedigreeFunction': 0.627
+            , 'Age': 45}]
+    )
+    y_train = df.loc[:,'Outcome']
 
+    model1 = PureGaussianNB()
+    model2 = LibraryGaussianNB()
+
+
+    model1.fit(x_train,y_train )
+    model2.fit(x_train,y_train )
+
+    result = pd.DataFrame(
+        data=[
+            ['model1', model1.predict(x_sample)[0]],
+            ['model2', model2.predict(x_sample)[0]]
+        ],
+        columns=['model', 'predict']
+    )
+
+    print(result)
