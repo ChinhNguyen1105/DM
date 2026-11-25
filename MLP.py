@@ -66,7 +66,6 @@ class PureMLP:
         return accuracy_score(y_test, predictions)
 
 
-
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 
@@ -98,12 +97,12 @@ class LibraryMLP:
         predictions = self.predict(X_test)
         return accuracy_score(y_test, predictions)
 
+
 if __name__ == '__main__':
     import pandas as pd
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import StandardScaler
 
-    # 1. Đọc dữ liệu
     columns = [
         'Pregnancies', 'Glucose', 'BloodPressure',
         'SkinThickness', 'Insulin', 'BMI',
@@ -118,7 +117,6 @@ if __name__ == '__main__':
         engine='python'
     )
 
-    # 2. Chia X, y
     X = df.drop(columns=['Outcome']).values
     y = df['Outcome'].values
 
@@ -129,12 +127,10 @@ if __name__ == '__main__':
         stratify=y
     )
 
-    # 3. Chuẩn hóa dữ liệu
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    # 4. Khởi tạo mô hình
     model1 = PureMLP(
         input_size=X_train.shape[1],
         hidden_size=8,
@@ -143,11 +139,9 @@ if __name__ == '__main__':
 
     model2 = LibraryMLP()
 
-    # 5. Huấn luyện
     model1.fit(X_train, y_train, epochs=2000)
     model2.fit(X_train, y_train)
 
-    # 6. Đánh giá
     result = pd.DataFrame([
         ['Pure MLP', model1.evaluate(X_test, y_test)],
         ['Library MLP', model2.evaluate(X_test, y_test)]

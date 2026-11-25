@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,7 +19,6 @@ class CNNFramework:
         self.class_names = None
         self.history = None
 
-    # 1. Load NumPy data
     def load_numpy_data(self, X_train, y_train, X_test, y_test):
 
         X_train = np.asarray(X_train, dtype="float32")
@@ -42,7 +40,6 @@ class CNNFramework:
         print("Train:", X_train.shape)
         print("Test:", X_test.shape)
 
-    # 2. Load Image Folder
     def load_folder_data(
         self, train_dir, test_dir,
         image_size=(224, 224), batch_size=32,
@@ -86,14 +83,12 @@ class CNNFramework:
 
         print("Classes:", self.class_names)
 
-    # 3. Build CNN
     def build_model(self):
 
         self.model = models.Sequential([
 
             layers.Input(shape=self.input_shape),
 
-            # CONVOLUTION
             layers.Conv2D(32, (3, 3), padding="same", activation="relu"),
             layers.MaxPooling2D((2, 2)),
 
@@ -103,12 +98,10 @@ class CNNFramework:
             layers.Conv2D(128, (3, 3), padding="same", activation="relu"),
             layers.MaxPooling2D((2, 2)),
 
-            # FULLY CONNECTED
             layers.Flatten(),
             layers.Dense(128, activation="relu"),
             layers.Dropout(0.3),
 
-            # OUTPUT
             layers.Dense(self.num_classes, activation="softmax")
         ])
 
@@ -122,7 +115,6 @@ class CNNFramework:
 
         return self.model
 
-    # 4. Train
     def train(self, epochs=10, batch_size=32, validation_split=0.1):
 
         if self.model is None or self.train_data is None:
@@ -146,23 +138,21 @@ class CNNFramework:
 
         return self.history
 
-    # 5. Evaluate
     def evaluate(self):
 
         if self.model is None or self.test_data is None:
             raise ValueError("Build model and load data first!")
 
-        loss, accuracy = self.model.evaluate(
-            *self.test_data if isinstance(self.test_data, tuple)
-            else [self.test_data]
-        )
+        if isinstance(self.test_data, tuple):
+            loss, accuracy = self.model.evaluate(*self.test_data)
+        else:
+            loss, accuracy = self.model.evaluate(self.test_data)
 
         print(f"Loss: {loss:.4f}")
         print(f"Accuracy: {accuracy * 100:.2f}%")
 
         return loss, accuracy
 
-    # 6. Predict
     def predict(self, image):
 
         image = np.asarray(image, dtype="float32")
@@ -187,7 +177,6 @@ class CNNFramework:
 
         return index, confidence
 
-    # 7. Plot History
     def plot_history(self):
 
         if self.history is None:
@@ -204,43 +193,34 @@ class CNNFramework:
 
         plt.show()
 
-    # 8. Save Model
     def save_model(self, path="cnn_model.keras"):
 
         self.model.save(path)
         print("Model saved:", path)
 
-    # 9. Load Model
     def load_model(self, path):
 
         self.model = tf.keras.models.load_model(path)
         print("Model loaded:", path)
 
 
-# MAIN
 if __name__ == "__main__":
 
     cnn = CNNFramework()
 
-    # Load data
     (X_train, y_train), (X_test, y_test) = (
         tf.keras.datasets.mnist.load_data()
     )
 
     cnn.load_numpy_data(X_train, y_train, X_test, y_test)
 
-    # Build and train
     cnn.build_model()
     cnn.train(epochs=5)
 
-    # Evaluate
     cnn.evaluate()
 
-    # Predict
     cnn.predict(X_test[0])
 
-    # Plot
     cnn.plot_history()
 
-    # Save
     cnn.save_model()

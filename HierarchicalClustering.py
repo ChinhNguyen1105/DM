@@ -1,4 +1,3 @@
-
 import numpy as np
 
 
@@ -72,7 +71,6 @@ class PureHierarchicalClustering:
         return self
 
 
-
 import matplotlib.pyplot as plt
 import scipy.cluster.hierarchy as sch
 from sklearn.cluster import AgglomerativeClustering
@@ -105,23 +103,20 @@ class LibraryHierarchicalClustering:
         plt.ylabel("Euclidean Distance")
         plt.show()
 
+
 if __name__ == '__main__':
     import pandas as pd
     from sklearn.preprocessing import StandardScaler
 
-    # 1. Đọc dữ liệu
     df = pd.read_csv(
         r'D:\KhaiPhaDuLieu\TX2_KhaiPha\Data\diabetes.txt'
     )
 
-    # 2. Lấy Features
     X = df.drop(columns=['Outcome'])
 
-    # 3. Chuẩn hóa dữ liệu
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
-    # 4. Khởi tạo mô hình
     model1 = PureHierarchicalClustering(
         n_clusters=2,
         linkage="single"
@@ -132,11 +127,9 @@ if __name__ == '__main__':
         linkage="single"
     )
 
-    # 5. Huấn luyện
     model1.fit(X)
     model2.fit(X)
 
-    # 6. Hiển thị kết quả
     result = pd.DataFrame({
         'Pure Hierarchical': model1.labels_,
         'Library Hierarchical': model2.labels_
@@ -144,5 +137,4 @@ if __name__ == '__main__':
 
     print(result)
 
-    # 7. Vẽ Dendrogram
     model2.plot_dendrogram(X, linkage="single")
