@@ -1,0 +1,8 @@
+tensorflow
+numpy
+matplotlib
+itertools
+pandas
+mlxtend
+sklearn
+scipy
