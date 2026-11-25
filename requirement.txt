@@ -1,8 +1,7 @@
 tensorflow
 numpy
 matplotlib
-itertools
 pandas
 mlxtend
-sklearn
+scikit-learn
 scipy
